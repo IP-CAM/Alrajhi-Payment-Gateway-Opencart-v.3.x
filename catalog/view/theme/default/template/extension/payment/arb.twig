@@ -1,0 +1,11 @@
+<form action="{{ action }}" method="post">
+  <input type="hidden" name="id" value="{{ ap_trans_id }}" />
+  <input type="hidden" name="trandata" value="{{ ap_trandata }}" />
+  <input type="hidden" name="responseURL" value="{{ ap_returnurl }}" />
+  <input type="hidden" name="errorURL" value="{{ ap_cancelurl }}" />
+  <div class="buttons">
+    <div class="pull-right">
+      <input type="submit" value="{{ button_confirm }}" class="btn btn-primary" />
+    </div>
+  </div>
+</form>
