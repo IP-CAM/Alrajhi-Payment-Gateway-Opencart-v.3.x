@@ -3,6 +3,7 @@
 class ControllerExtensionPaymentArb extends Controller
 {
     const ARB_PAYMENT_ENDPOINT = 'https://securepayments.alrajhibank.com.sa/pg/paymentpage.htm?PaymentID=';
+    const ARB_PAYMENT_ENDPOINT_LIVE = 'https://digitalpayments.alrajhibank.com.sa/pg/paymentpage.htm?PaymentID=';
     const ARB_SUCCESS_STATUS = 'CAPTURED';
 
     private $orderInfo;
@@ -25,7 +26,12 @@ class ControllerExtensionPaymentArb extends Controller
         $data['ap_returnurl'] = $this->url->link('extension/payment/arb/result&flag=success');
         $data['ap_cancelurl'] = $this->url->link('extension/payment/arb/result&flag=failure', '', true);
         $paymentId = $this->getPaymentId();
-        $data['action'] = self::ARB_PAYMENT_ENDPOINT . $paymentId;
+        if($this->config->get('payment_arb_testmode') == 0){
+            $data['action'] = self::ARB_PAYMENT_ENDPOINT_LIVE . $paymentId;
+        }else{
+            $data['action'] = self::ARB_PAYMENT_ENDPOINT . $paymentId;
+        }
+       
         return $this->load->view('extension/payment/arb', $data);
     }
 
@@ -56,13 +62,17 @@ class ControllerExtensionPaymentArb extends Controller
 
     private function getPaymentId()
     {
-        if ($this->config->get('payment_arb_endpoint') == 1) {
-			$url = $this->config->get('payment_arb_endpoint');
-		} else {
-			$url = 'https://securepayments.alrajhibank.com.sa/pg/payment/hosted.htm';
-		}
+        
+        
 
+            if($this->config->get('payment_arb_testmode') == 0){
+                $url= 'https://digitalpayments.alrajhibank.com.sa/pg/payment/hosted.htm';
+            }else{
+                $url= 'https://securepayments.alrajhibank.com.sa/pg/payment/hosted.htm';
+            }
 
+  
+       
         $plainData = $this->getRequestData();
         $wrappedData = $this->wrapData($plainData);
 
@@ -122,8 +132,8 @@ class ControllerExtensionPaymentArb extends Controller
 
         $amount = $this->currency->format($this->order_info['total'], $this->order_info['currency_code'], $this->order_info['currency_value'], false);
 
-        $trackId = (string)rand(1, 1000000); // TODO: Change to real value
-
+        $trackId = (string)md5(uniqid(rand(), true));
+    
         $data = [
             "id" => $this->config->get('payment_arb_trans_id'),
             "password" => $this->config->get('payment_arb_security'),
@@ -134,7 +144,8 @@ class ControllerExtensionPaymentArb extends Controller
             "trackId" => $trackId,
             "amt" => $amount,
             "udf1" => $this->session->data["order_id"],
-            "udf2" => $this->session->getId()
+            "udf2" => $this->session->getId(),
+            "langid"=> $this->language->get('code')
         ];
 
         $data = json_encode($data, JSON_UNESCAPED_SLASHES);

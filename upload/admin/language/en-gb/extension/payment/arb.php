@@ -18,7 +18,9 @@ $_['entry_order_status'] = 'Order Status';
 $_['entry_geo_zone']	 = 'Geo Zone';
 $_['entry_status']		 = 'Status';
 $_['entry_sort_order']	 = 'Sort Order';
-
+$_['entry_testmode']     = 'Test Mode';
+$_['entry_testmode_off'] = 'OFF';
+$_['entry_testmode_on'] = 'ON';
 // Help
 $_['help_callback']		 = 'This has to be set in the Arb control panel. You will also need to check the "IPN Status" to enabled.';
 $_['help_total']		 = 'The checkout total the order must reach before this payment method becomes active.';

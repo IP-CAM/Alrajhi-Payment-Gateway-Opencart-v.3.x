@@ -82,11 +82,20 @@ class ControllerExtensionPaymentArb extends Controller {
 		} else {
 			$data['payment_arb_resource'] = $this->config->get('payment_arb_resource');
 		}
-		if (isset($this->request->post['payment_arb_endpointe'])) {
-			$data['payment_arb_endpoint'] = $this->request->post['payment_arb_endpoint'];
-		} else {
-			$data['payment_arb_endpoint'] = $this->config->get('payment_arb_endpoint');
+
+		
+		if (isset($this->request->post['payment_arb_testmode'])) {
+			
+				$data['payment_arb_testmode'] = $this->request->post['payment_arb_testmode'];
+		}else{
+			
+				$data['payment_arb_testmode'] = $this->config->get('payment_arb_testmode');
 		}
+
+		
+
+		
+
 
 		$data['callback'] = HTTP_CATALOG . 'index.php?route=extension/payment/arb/callback';
 
@@ -150,9 +159,9 @@ class ControllerExtensionPaymentArb extends Controller {
 		if (!$this->request->post['payment_arb_resource']) {
 			$this->error['resource'] = $this->language->get('error_resource');
 		}
-		if (!$this->request->post['payment_arb_endpoint']) {
-			$this->error['endpoint'] = $this->language->get('error_endpoint');
-		}
+		// if (!$this->request->post['payment_arb_endpoint']) {
+		// 	$this->error['endpoint'] = $this->language->get('error_endpoint');
+		// }
 
 		return !$this->error;
 	}
